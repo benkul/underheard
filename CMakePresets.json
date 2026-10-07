@@ -1,0 +1,94 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "base-macos",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "11.0"
+      }
+    },
+    {
+      "name": "base-windows",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "macos-ninja",
+      "displayName": "macOS (Ninja)",
+      "description": "macOS build with Ninja generator (NanoVG/Metal)",
+      "inherits": "base-macos",
+      "generator": "Ninja"
+    },
+    {
+      "name": "macos-xcode",
+      "displayName": "macOS (Xcode)",
+      "description": "macOS build with Xcode generator (NanoVG/Metal)",
+      "inherits": "base-macos",
+      "generator": "Xcode"
+    },
+    {
+      "name": "windows-ninja",
+      "displayName": "Windows (Ninja)",
+      "description": "Windows build with Ninja generator (NanoVG/GL2)",
+      "inherits": "base-windows",
+      "generator": "Ninja"
+    },
+    {
+      "name": "windows-vs2022",
+      "displayName": "Windows (VS2022)",
+      "description": "Windows x64 build with Visual Studio 2022 (NanoVG/GL2)",
+      "inherits": "base-windows",
+      "generator": "Visual Studio 17 2022",
+      "architecture": {
+        "value": "x64",
+        "strategy": "set"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "macos-ninja",
+      "configurePreset": "macos-ninja"
+    },
+    {
+      "name": "macos-xcode",
+      "configurePreset": "macos-xcode",
+      "configuration": "Release"
+    },
+    {
+      "name": "windows-ninja",
+      "configurePreset": "windows-ninja"
+    },
+    {
+      "name": "windows-vs2022",
+      "configurePreset": "windows-vs2022",
+      "configuration": "Release"
+    }
+  ]
+}
