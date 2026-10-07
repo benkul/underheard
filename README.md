@@ -8,7 +8,8 @@ Audio plugins about tape, rooms and slow change.
   different mic, in spaces you recorded yourself.
 - **Section**: an ensemble of imperfect players: every note is taken up by a small group of
   bowed strings who drift, swell, and tune to each other, seated in a room.
-- **Drifter**: moves a set of parameters slowly toward somewhere new.
+- **Drifter**: an instrument for Ableton Live that loads another synth inside itself and
+  slowly drifts several of its parameters while the song plays (VST3 only).
 - **underheard-chorus, -delay, -reverb**: the suite's own effects.
 
 Formats are VST3 and AU, built with [iPlug2](https://github.com/iPlug2/iPlug2). See

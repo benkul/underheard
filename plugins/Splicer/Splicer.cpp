@@ -105,14 +105,14 @@ Splicer::Splicer(const InstanceInfo& info)
   GetParam(kParamDelayHeads)->InitEnum("Delay Heads", 0, {"Single", "Ping-pong", "Multi-head"}, 0, "Effects");
   GetParam(kParamReverbEngine)->InitEnum("Reverb Engine", 1, {"Plate", "Hall"}, 0, "Effects");
 
-  GetParam(kParamDriftOn)->InitBool("Drift", false, "", 0, "Drifter");
-  GetParam(kParamDriftLength)->InitDouble("Drift Length", 20., 1., 600., 0.1, "s", 0, "Drifter", IParam::ShapeExp());
-  GetParam(kParamDriftCurve)->InitEnum("Drift Curve", underheard::Drifter::kCurveSmooth, {"Linear", "Smooth", "Fast start", "Slow start"}, 0, "Drifter");
-  GetParam(kParamDriftSmear)->InitPercentage("Drift Smear", 30., 0., 100., 0, "Drifter");
-  GetParam(kParamDriftReach)->InitPercentage("Drift Reach", 30., 0., 100., 0, "Drifter");
-  GetParam(kParamDriftGravity)->InitPercentage("Drift Gravity", 30., 0., 100., 0, "Drifter");
-  GetParam(kParamDriftKeep)->InitBool("Drift Keep", false, "", 0, "Drifter");
-  GetParam(kParamDriftReturn)->InitBool("Drift Return", false, "", 0, "Drifter");
+  GetParam(kParamDriftOn)->InitBool("Drift", false, "", 0, "Drift");
+  GetParam(kParamDriftLength)->InitDouble("Drift Length", 20., 1., 600., 0.1, "s", 0, "Drift", IParam::ShapeExp());
+  GetParam(kParamDriftCurve)->InitEnum("Drift Curve", underheard::Drifter::kCurveSmooth, {"Linear", "Smooth", "Fast start", "Slow start"}, 0, "Drift");
+  GetParam(kParamDriftSmear)->InitPercentage("Drift Smear", 30., 0., 100., 0, "Drift");
+  GetParam(kParamDriftReach)->InitPercentage("Drift Reach", 30., 0., 100., 0, "Drift");
+  GetParam(kParamDriftGravity)->InitPercentage("Drift Gravity", 30., 0., 100., 0, "Drift");
+  GetParam(kParamDriftKeep)->InitBool("Drift Keep", false, "", 0, "Drift");
+  GetParam(kParamDriftReturn)->InitBool("Drift Return", false, "", 0, "Drift");
   GetParam(kParamInputLevel)->InitPercentage("Input Level", 0., 0., 100., 0, "Input");
   GetParam(kParamInputSend)->InitPercentage("Input Send", 0., 0., 100., 0, "Input");
   for (int i = 0; i < kNumDriftTargets; i++)
@@ -753,7 +753,7 @@ void Splicer::BuildUI(IGraphics* g)
   g->AttachControl(new IVButtonControl(titleRow.ReduceFromRight(120.f).GetPadded(0.f, 0.f, 0.f, -2.f), [this](IControl* c) {
     SplashClickActionFunc(c);
     SelectLoop(kFocusDrifter);
-  }, "DRIFTER", style));
+  }, "DRIFT", style));
   titleRow.ReduceFromRight(8.f);
   g->AttachControl(new IVButtonControl(titleRow.ReduceFromRight(120.f).GetPadded(0.f, 0.f, 0.f, -2.f), [this](IControl* c) {
     SplashClickActionFunc(c);
@@ -843,7 +843,7 @@ void Splicer::BuildUI(IGraphics* g)
 
     g->AttachControl(new CheckboxControl(cell(3, 0).GetMidVPadded(12.f), kParamDriftOn, "Drift"), kNoTag, gr);
     g->AttachControl(new IVKnobControl(cell(3, 1), kParamFxWarmth, "Warmth", style), kNoTag, gr);
-    g->AttachControl(new ITextControl(cell(3, 2, 5), "The Sends (loops and input) feed this chain; it's heard on the Tape side of Mix. Drift slowly moves these settings (shape it in DRIFTER).", hint), kNoTag, gr);
+    g->AttachControl(new ITextControl(cell(3, 2, 5), "The Sends (loops and input) feed this chain; it's heard on the Tape side of Mix. Drift slowly moves these settings (shape it in DRIFT).", hint), kNoTag, gr);
   }
 
   // ---- Drifter, also shown in the focus panel.
@@ -907,7 +907,7 @@ void Splicer::SelectLoop(int loop)
     if (fx)
       t.Set("EFFECTS");
     else if (drift)
-      t.Set("DRIFTER  (moves the effects)");
+      t.Set("DRIFT  (moves the effects)");
     else
       t.SetFormatted(16, "LOOP %d", loop + 1);
     title->SetStr(t.Get());

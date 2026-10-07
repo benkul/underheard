@@ -58,7 +58,7 @@ stage 5). Everything here is also a host parameter, so in Live you can MIDI-map 
    the loops, and **Send** runs it through the effects (and Drift). Keep it low for a subtle
    wash.
 10. **Drift.** In EFFECTS, tick **Drift**: the effect settings start wandering slowly around
-   where you set them. Open **DRIFTER** to see them move and to shape it (Length, Curve, Smear,
+   where you set them. Open **DRIFT** to see them move and to shape it (Length, Curve, Smear,
    Reach, Gravity). **KEEP** makes the current drifted sound your settings; **RETURN** glides
    home.
 11. **Save and reopen** the GarageBand project. The loops come back stopped; press PLAY. Their

@@ -8,7 +8,7 @@ slow change:
 | **Splicer** | 4-loop tape looper whose loops wear out | `docs/SPLICER-SPEC.md` | stage 4 done: all features, generic UI. **Ready to try** (`docs/TRY-SPLICER.md`) |
 | **Room Bleed** | listening position, occlusion, mic type, your own recorded spaces | `docs/ROOM-BLEED-SPEC.md` | PoC complete (R0–R6) |
 | **Section** | an ensemble of imperfect players: the suite's sound generator (bowed strings) | `docs/SECTION-SPEC.md` | first playable version done (stages 1–5 together) |
-| **Drifter** | slow drift between parameter states (Length, Smear, Reach, Gravity, Path, Audio Smear) | — | rudimentary version inside Splicer (drifts the effects) |
+| **Drifter** | a VST3 instrument for Live: hosts one VST3 synth and slowly drifts several of its parameters while the song plays | `docs/DRIFTER-SPEC.md` | stages 1–4 built and tested on the Mac; waiting on the Windows checks (`docs/DRIFTER-WINDOWS-CHECKLIST.md`) |
 | `underheard-chorus` / `-delay` / `-reverb` | the suite's own effects, standalone and built into Splicer | `docs/EFFECTS-SPEC.md` | **all three done** (standalone), and Splicer's chain now uses their engines |
 
 - **Target:** VST3 in **Ableton Live 11 on Windows**.
@@ -370,7 +370,9 @@ come back.
 
 **Rule from now on:** parameters can be appended freely; the count in the state handles it.
 
-### Drifter, rudimentary (done 2026-10-04)
+### Splicer's drift (done 2026-10-04)
+A drift component inside Splicer. Its engine, `libs/drifter-core`, is also the one under the
+Drifter plugin (see the Drifter section below).
 
 **`libs/drifter-core/Drifter.h`** (framework-free, real-time safe, header-only)
 - **What it moves:** up to 32 targets. Each holds an *offset* from its home setting, in
@@ -393,27 +395,31 @@ come back.
   jumps.
 - **UI:**
   - a **Drift** checkbox (`CheckboxControl`) in the EFFECTS view;
-  - a **DRIFTER** button opening a view with MOTION (Length, Curve, Smear, Drift) and RANGE
-    (Reach, Gravity, KEEP, RETURN), plus `DriftView`, where each target shows a track with its
-    home mark and a dot where it has drifted, and a bar shows the shift's progress.
+  - a **DRIFT** button opening the drift view. The view has MOTION
+    (Length, Curve, Smear, Drift) and RANGE (Reach, Gravity, KEEP, RETURN), plus `DriftView`:
+    - each target shows a track with its home mark and a dot where it has drifted;
+    - a bar shows the shift's progress.
 - **Parameters**, appended after the Sends: `Drift, Drift Length (1–600 s, default 20), Drift
   Curve, Drift Smear, Drift Reach, Drift Gravity (30% each), Drift Keep, Drift Return`. Off by
   default.
 
 **Tests**
-- `DrifterTest`: off means still, Reach bounds, full Gravity, Smear 0 in step versus Smear 1
-  staggered, curve shapes, a Length change applying mid-shift, Return, off gliding home, Rebase.
+- `DrifterTest` (the engine): off means still, Reach bounds, full Gravity, Smear 0 in step versus
+  Smear 1 staggered, curve shapes, a Length change applying mid-shift, Return, off gliding home,
+  Rebase.
 - `SplicerAUTest`: the parameters are untouched while drifting; Keep changes all 11 settings and
   springs back; switching off afterwards keeps them.
 
-**Not yet** (from the spec): choosing which settings drift (including loop settings), Trigger
-modes (by bars, by chance, by note), Path (wandering on the way), Audio Smear for settings that
-can't glide, and a standalone Drifter that hosts other plugins.
+**Not yet** (from the spec):
+- choosing which settings drift (including loop settings);
+- Trigger modes (by bars, by chance, by note);
+- Path (wandering on the way);
+- Audio Smear, for settings that can't glide.
 
 ### Input strip (done 2026-10-04)
 - **An INPUT strip** under the loop strips treats the live (main) input like a loop:
   - **Level** puts it on the Tape side with the loops;
-  - **Send** feeds the effects chain, so Drifter's movement applies to it.
+  - **Send** feeds the effects chain, so the drift applies to it too.
 - **Both default to 0.** Mix still crossfades the untouched dry input against the Tape side
   (loops, input Level, effects).
 - **Parameters**, appended: `Input Level, Input Send`. The window is now 1100×850.
@@ -443,7 +449,7 @@ The user asked for the new effects and Warmth in Splicer (unparking just this pa
   Warmth). The old `Chorus.h`, `TapeDelay.h` and `Reverb.h` are gone. Rooms and Recordings
   stay in the standalone reverb: they need the room drawing and convolution, which don't fit
   Splicer's panel.
-- **The old controls keep their meaning,** so saved projects and Drifter's 11 targets carry
+- **The old controls keep their meaning,** so saved projects and the drift's 11 targets carry
   over:
   - Delay Tone 0–100% → high cut 1 kHz .. 14 kHz;
   - Reverb Size 0–100% → x0.5 .. x2;
@@ -684,17 +690,17 @@ fixes the harsh edges it can find in code; the tuning is the user's A/B.
   - darker defaults, if Warmth alone isn't enough;
   - whether Warmth should also colour the dry sound (it doesn't now).
 
-### PARKED (2026-10-04): Splicer, Drifter and the effects
+### PARKED (2026-10-04): Splicer (with its drift) and the effects
 The user is happy with how they behave and has ideas for shaping them further, but wants to do
 that once they're in their real Windows/Live production workflow. Don't extend them until
 then; fixes are fine. Work moves to Room Bleed (`docs/ROOM-BLEED-SPEC.md`).
 
 ### Next (when unparked)
-- **Drifter, beyond rudimentary**, when the user reaches for it (see "Not yet" above).
+- **Splicer's drift, beyond rudimentary**, when the user reaches for it (see "Not yet" above).
 - **The standalone effects** are done, and Splicer's chain uses their engines (see "Splicer's
   effects" above).
 - **Stage 5:** refine the UI from the user's feedback.
-- **Stage 6:** `underheard-chorus/-delay/-reverb` built in (Dry + Send per loop), and Drifter.
+- **Stage 6:** `underheard-chorus/-delay/-reverb` built in (Dry + Send per loop), and the drift.
 - **Windows:** build and test in Live 11 once the PC is available. The Horsi Windows notes
   apply.
 
@@ -908,6 +914,21 @@ seated in Room Bleed's rooms, 6 players x 8 notes).
   - **Not seen by Claude:** the tabs and layout (no screen capture). Check that the pages
     switch and nothing overlaps.
 - Voices (sung vowels) and phrase-aware players are the candidates for next.
+
+## Drifter (`docs/DRIFTER-SPEC.md`, 2026-10-07)
+A VST3 instrument for Ableton Live 11 (Windows), on MIDI tracks: it loads one other VST3
+instrument, plays it from the track's MIDI, and slowly drifts up to 8 of its parameters while
+the song plays.
+- **Built and tested on the Mac** (stages 1–4):
+  - `libs/vst3host`: hosting a VST3 instrument, including its editor;
+  - `libs/drifter-core/DriftLanes.h`: lanes, learn and grabbing, on the same engine as Splicer's drift;
+  - `plugins/Drifter`: 128 pass-through slots, latency, saving, the strip with lane rows, and
+    the synth's editor embedded under the strip.
+- **Tests:** `DriftLanesTest`, `Vst3HostTest`, `DrifterPluginTest` and `DrifterEditorTest`
+  (all with Section as the hosted synth), plus the VST3 validator.
+- **Next:**
+  - the user checks it in Live on Windows (`docs/DRIFTER-WINDOWS-CHECKLIST.md`);
+  - stage 5: the Windows build notes.
 
 ## Invariants
 - **Parameters:** order is saved state. Append only, once anyone has saved projects.

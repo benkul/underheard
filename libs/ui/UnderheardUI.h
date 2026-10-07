@@ -44,6 +44,36 @@ private:
   std::function<void(int)> mOnChoose;
 };
 
+// A button whose menu is built when it's clicked (from whatever is current).
+class DynamicMenuButton : public IVButtonControl
+{
+public:
+  DynamicMenuButton(const IRECT& bounds, const char* label, const IVStyle& style, std::function<std::vector<std::string>()> items, std::function<void(int)> onChoose)
+  : IVButtonControl(bounds, nullptr, label, style), mItems(std::move(items)), mOnChoose(std::move(onChoose))
+  {
+  }
+  void OnMouseDown(float, float, const IMouseMod&) override
+  {
+    mMenu.Clear();
+    const auto items = mItems();
+    if (items.empty())
+      return;
+    for (const auto& item : items)
+      mMenu.AddItem(item.c_str());
+    GetUI()->CreatePopupMenu(*this, mMenu, mRECT);
+  }
+  void OnPopupMenuSelection(IPopupMenu* menu, int) override
+  {
+    if (menu && menu->GetChosenItemIdx() >= 0)
+      mOnChoose(menu->GetChosenItemIdx());
+  }
+
+private:
+  IPopupMenu mMenu;
+  std::function<std::vector<std::string>()> mItems;
+  std::function<void(int)> mOnChoose;
+};
+
 // A button that's on only while it's held (the delay's Throw).
 class HoldButton : public IVButtonControl
 {

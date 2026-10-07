@@ -85,6 +85,29 @@ public:
       mPhase = 1.;
   }
 
+  // Lanes (Drifter the plugin): change the number of targets without disturbing the others
+  // (new ones start at home), take one out, or make one's current place its home.
+  void SetCount(int numTargets)
+  {
+    numTargets = std::clamp(numTargets, 0, kMaxTargets);
+    for (int i = mCount; i < numTargets; i++)
+      mTargets[i] = Target{};
+    mCount = numTargets;
+  }
+  void RemoveTarget(int index)
+  {
+    if (index < 0 || index >= mCount)
+      return;
+    for (int i = index; i + 1 < mCount; i++)
+      mTargets[i] = mTargets[i + 1];
+    mCount--;
+  }
+  void RebaseTarget(int index)
+  {
+    if (index >= 0 && index < mCount)
+      mTargets[index] = Target{}; // at home, and stays there until the next shift
+  }
+
   void Advance(double seconds)
   {
     if (mCount == 0)

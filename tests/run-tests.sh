@@ -51,6 +51,11 @@ c++ -std=c++17 -Wall -Wextra -O1 -g -fsanitize=address,undefined -I"$ROOT/libs/d
 "$OUT/DrifterTest" | grep -v '^ok' | grep -v '^$' || true
 "$OUT/DrifterTest" >/dev/null
 
+echo "== drifter-core: Drifter's lanes"
+c++ -std=c++17 -Wall -Wextra -O2 -g -fsanitize=address,undefined -I"$ROOT/libs/drifter-core" "$ROOT/tests/DriftLanesTest.cpp" -o "$OUT/DriftLanesTest"
+"$OUT/DriftLanesTest" | grep -v '^ok' | grep -v '^$' || true
+"$OUT/DriftLanesTest" >/dev/null
+
 echo "== fx: Splicer's effects chain tests"
 c++ -std=c++17 -Wall -Wextra -O2 -g -fsanitize=address,undefined -I"$ROOT/libs/tape-core" -I"$ROOT/libs/fx" \
   "$ROOT/libs/fx/MultiChorus.cpp" "$ROOT/libs/fx/DubDelay.cpp" "$ROOT/libs/fx/AlgoReverb.cpp" "$ROOT/tests/FxTest.cpp" -o "$OUT/FxTest"
@@ -148,6 +153,29 @@ if [ "$(uname)" = "Darwin" ]; then
   c++ -std=c++17 -Wall -O1 "$ROOT/tests/SectionAUTest.cpp" -framework AudioToolbox -framework CoreFoundation -o "$OUT/SectionAUTest"
   "$OUT/SectionAUTest"
 
+  echo "== vst3host: hosting a VST3 instrument (Section) for Drifter"
+  SDK="$ROOT/iPlug2/Dependencies/IPlug/VST3_SDK"
+  HOSTOBJ="$OUT/vst3host-objs" # (only what this script compiles)
+  mkdir -p "$HOSTOBJ"
+  for f in $(cat "$ROOT/tests/vst3host-sources.txt"); do
+    c++ -std=c++17 -O1 -w -DRELEASE=1 -I"$SDK" -c "$SDK/$f" -o "$HOSTOBJ/$(echo "$f" | tr / _).o"
+  done
+  for f in public.sdk/source/vst/hosting/module_mac.mm public.sdk/source/common/threadchecker_mac.mm; do
+    c++ -std=c++17 -fobjc-arc -O1 -w -DRELEASE=1 -I"$SDK" -c "$SDK/$f" -o "$HOSTOBJ/$(echo "$f" | tr / _).o"
+  done
+  c++ -std=c++17 -O1 -Wall -Wextra -DRELEASE=1 -isystem "$SDK" -I"$ROOT/libs/vst3host" -c "$ROOT/libs/vst3host/HostedInstrument.cpp" -o "$HOSTOBJ/HostedInstrument.o"
+  c++ -std=c++17 -O1 -Wall -Wextra -I"$ROOT/libs/vst3host" -I"$ROOT/libs/drifter-core" "$ROOT/tests/Vst3HostTest.cpp" "$HOSTOBJ"/*.o -framework CoreFoundation -framework Foundation -o "$OUT/Vst3HostTest"
+  # (Loading two iPlug2 bundles into one process prints objc duplicate-class notes on macOS: harmless here.)
+  ( set -o pipefail; "$OUT/Vst3HostTest" 2>&1 | grep -v '^objc' )
+
+  echo "== Drifter: the plugin hosting Section (slots, drift, saving)"
+  c++ -std=c++17 -O1 -Wall -Wextra -I"$ROOT/libs/vst3host" "$ROOT/tests/DrifterPluginTest.cpp" "$HOSTOBJ"/*.o -framework CoreFoundation -framework Foundation -o "$OUT/DrifterPluginTest"
+  ( set -o pipefail; "$OUT/DrifterPluginTest" 2>&1 | grep -v '^objc' )
+
+  echo "== Drifter: its window, with Section's editor inside (opens a window briefly)"
+  c++ -std=c++17 -fobjc-arc -O1 -Wall -Wextra -I"$ROOT/libs/vst3host" "$ROOT/tests/DrifterEditorTest.mm" "$HOSTOBJ"/*.o -framework Cocoa -framework CoreFoundation -o "$OUT/DrifterEditorTest"
+  ( set -o pipefail; "$OUT/DrifterEditorTest" 2>&1 | grep -v '^objc' )
+
   echo "== Section: auval (instrument)"
   auval -v aumu Sctn Undh > "$OUT/auval-Section.txt" || { cat "$OUT/auval-Section.txt"; exit 1; }
   grep "VALIDATION" "$OUT/auval-Section.txt"
@@ -161,7 +189,7 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 VALIDATOR="$ROOT/iPlug2/Dependencies/IPlug/VST3_SDK/validator"
-for name in Splicer RoomBleed UnderheardDelay UnderheardChorus UnderheardReverb Section; do
+for name in Splicer RoomBleed UnderheardDelay UnderheardChorus UnderheardReverb Section Drifter; do
   VST3="$HOME/Library/Audio/Plug-Ins/VST3/$name.vst3"
   if [ -x "$VALIDATOR" ] && [ -d "$VST3" ]; then
     echo "== $name: VST3 validator"

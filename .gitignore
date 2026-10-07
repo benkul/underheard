@@ -11,3 +11,17 @@ mkcert*
 .claude/settings.local.json
 __pycache__
 /build/
+
+# Build output. Every CMake preset builds into /build/ (above); these are what other ways of
+# building, and the editors, leave behind (Visual Studio on Windows especially).
+/out/
+.vs/
+CMakeUserPresets.json
+compile_commands.json
+.cache/
+x64/
+Win32/
+ARM64/
+*.aps
+*.VC.db
+*.VC.opendb

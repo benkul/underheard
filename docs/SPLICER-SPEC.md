@@ -22,7 +22,7 @@ Design principles:
 - **Restrictions are good.** Four loops and one play head per loop in v1 (more heads come in a
   later stage). The loop length limit is fixed.
 - **Every control is a host parameter**, so anything can be MIDI-mapped in Live, automated, or
-  driven by Drifter.
+  moved by Splicer's drift.
 
 ## 2. Signal flow
 
@@ -152,7 +152,7 @@ Per pass, scaled by **Wear Rate** (at 100%, a 4 s loop is heavily worn after abo
 - **Restore** (the escape hatch): copies the clean tape over the worn tape. It removes wear and
   keeps cuts and overdubs. There is no step-by-step undo.
 
-## 6. Built-in effects and Drifter
+## 6. Built-in effects and drift
 
 - **The FX chain** is a fixed serial order: `underheard-chorus → underheard-delay →
   underheard-reverb`. It's the same DSP as the standalone plugins. More stages, such as a
@@ -165,10 +165,11 @@ Per pass, scaled by **Wear Rate** (at 100%, a 4 s loop is heavily worn after abo
 - **One shared FX bus.** All sends sum into a single chain, with one set of knobs per stage.
   Each stage also has its own bypass, so you can skip chorus for the whole chain.
 - **Tails continue** after a loop stops or its Send drops.
-- **Drifter** is built in with its targets marked per parameter: Speed, Wow, Flutter, Wear Rate,
+- **Drift** is built in, with its targets marked per parameter: Speed, Wow, Flutter, Wear Rate,
   Erase, Feedback, Dry, Send, Pan, and the FX parameters. Splicer is the first place the
   drift engine (Length, Smear, Reach, Gravity, Path, Audio Smear, Keep/Return) gets proven.
-  Audio Smear matters most for speed and delay-time moves.
+  Audio Smear matters most for speed and delay-time moves. (The same engine also runs
+  **Drifter**, a separate plugin.)
 - Both arrive after the core looper works (see the stages in section 10).
 
 ## 7. Performance UI
@@ -230,11 +231,12 @@ Memory is allocated to the recorded length, so typical use is much smaller.
 underheard/
   libs/tape-core/      framework-free C++: tape buffer, varispeed read/write, motor,
                        wow/flutter, wear, splice
-  libs/drifter-core/   framework-free C++: drift engine
+  libs/drifter-core/   framework-free C++: drift engine (Splicer's drift and Drifter)
+  libs/vst3host/       framework-free C++: hosting a VST3 instrument (for Drifter)
   libs/fx/             underheard-delay, -reverb, -chorus DSP (shared by all plugins)
   plugins/Splicer/     iPlug2 plugin (VST3 + AU)
   plugins/RoomBleed/   later
-  plugins/Drifter/     later (standalone / host)
+  plugins/Drifter/     iPlug2 plugin (VST3): hosts a VST3 instrument and drifts it
   docs/
 ```
 
@@ -252,7 +254,7 @@ underheard/
 | 3 | Wear model, per-loop toggle, Age, Restore; wow, flutter and hiss; playback tone by speed | A loop audibly disintegrates over a few minutes at a high Wear Rate |
 | 4 | Razor (Reverse, Remove, Isolate) | Cuts land at the playhead and add splices |
 | 5 | Performance UI (tape drawing, big buttons) | Playable live with a pad controller |
-| 6 | underheard-delay and underheard-reverb built in; Drifter core integrated | Drifter moves Splicer parameters with Smear and Audio Smear |
+| 6 | underheard-delay and underheard-reverb built in; the drift engine integrated | The drift moves Splicer parameters with Smear and Audio Smear |
 
 Development happens on the Mac in GarageBand (AU). Windows and Live 11 testing start once the PC
 is available.
