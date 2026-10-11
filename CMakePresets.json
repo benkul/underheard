@@ -60,6 +60,17 @@
       "generator": "Ninja"
     },
     {
+      "name": "windows-vs2026",
+      "displayName": "Windows (VS2026 / Build Tools 2026)",
+      "description": "Windows x64 build with Visual Studio 2026 or its Build Tools (NanoVG/GL2); needs CMake 4.2+",
+      "inherits": "base-windows",
+      "generator": "Visual Studio 18 2026",
+      "architecture": {
+        "value": "x64",
+        "strategy": "set"
+      }
+    },
+    {
       "name": "windows-vs2022",
       "displayName": "Windows (VS2022)",
       "description": "Windows x64 build with Visual Studio 2022 (NanoVG/GL2)",
@@ -84,6 +95,11 @@
     {
       "name": "windows-ninja",
       "configurePreset": "windows-ninja"
+    },
+    {
+      "name": "windows-vs2026",
+      "configurePreset": "windows-vs2026",
+      "configuration": "Release"
     },
     {
       "name": "windows-vs2022",

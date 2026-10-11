@@ -27,11 +27,13 @@ Microsoft's compiler, which CMake drives for you.
 
 ### 1. Install the tools (once)
 
-- **Build Tools for Visual Studio 2022**: Microsoft's compiler and the Windows SDK, without the
+- **Build Tools for Visual Studio 2026**: Microsoft's compiler and the Windows SDK, without the
   editor. It's on https://visualstudio.microsoft.com/downloads/ under "Tools for Visual Studio".
   In its installer, tick the **Desktop development with C++** workload. (A full Visual Studio
-  2022 install works too, if one is already there.)
-- **CMake** 3.25 or newer, from https://cmake.org/download/ (the Windows x64 installer). Tick
+  install works too. With the 2022 version instead of 2026, use the `windows-vs2022` preset
+  wherever this says `windows-vs2026`.)
+- **CMake 4.2 or newer**, from https://cmake.org/download/ (the Windows x64 installer). Older
+  versions don't know Visual Studio 2026. Tick
   the option to **add CMake to the PATH**, for all users or for you. (Build Tools brings its own
   CMake, but not onto Git Bash's PATH.)
 - **Git for Windows**, which you already have: it's what provides Git Bash.
@@ -41,7 +43,7 @@ Then open a new Git Bash window, so it sees CMake. Check that it does, and let G
 long file paths inside the SDKs:
 
 ```bash
-cmake --version          # 3.25 or newer
+cmake --version          # 4.2 or newer
 git config --global core.longpaths true
 ```
 
@@ -91,15 +93,15 @@ Writing into Program Files needs administrator rights, so open **Git Bash as adm
 
 ```bash
 cd /c/dev/underheard
-cmake --preset windows-vs2022 -DIPLUG_VST3_DEPLOY_PATH="C:/Program Files/Common Files/VST3"
-cmake --build --preset windows-vs2022 --target Splicer-vst3 RoomBleed-vst3 UnderheardDelay-vst3 UnderheardChorus-vst3 UnderheardReverb-vst3 Section-vst3 Drifter-vst3
+cmake --preset windows-vs2026 -DIPLUG_VST3_DEPLOY_PATH="C:/Program Files/Common Files/VST3"
+cmake --build --preset windows-vs2026 --target Splicer-vst3 RoomBleed-vst3 UnderheardDelay-vst3 UnderheardChorus-vst3 UnderheardReverb-vst3 Section-vst3 Drifter-vst3
 ```
 
-The `windows-vs2022` preset uses Microsoft's build system (MSBuild, part of Build Tools)
+The `windows-vs2026` preset uses Microsoft's build system (MSBuild, part of Build Tools)
 behind the scenes. Nothing opens; it all happens in the terminal.
 
 - **The first build takes a while.** Later builds only recompile what changed.
-- **What you get:** each plugin is built into `build/windows-vs2022/out/<Name>.vst3`, then
+- **What you get:** each plugin is built into `build/windows-vs2026/out/<Name>.vst3`, then
   copied into `C:\Program Files\Common Files\VST3`. The copy only happens when a plugin
   actually relinks.
 - **To build one plugin,** name only its target, e.g. `--target Section-vst3`.
@@ -107,11 +109,11 @@ behind the scenes. Nothing opens; it all happens in the terminal.
   won't let the build replace a plugin that Live has loaded.
 - **Without admin rights:** leave out the `-DIPLUG_VST3_DEPLOY_PATH=…` part. Then copy the
   plugins in yourself from an administrator Git Bash:
-  `cp -r build/windows-vs2022/out/*.vst3 "/c/Program Files/Common Files/VST3/"`.
+  `cp -r build/windows-vs2026/out/*.vst3 "/c/Program Files/Common Files/VST3/"`.
 - **To change the install folder later,** run the `cmake --preset …` line again with the new
   path. CMake remembers the last one.
 - **Editing:** use any editor. The build writes `compile_commands.json` into
-  `build/windows-vs2022/`, which clangd and VS Code's C++ extension use to understand the
+  `build/windows-vs2026/`, which clangd and VS Code's C++ extension use to understand the
   code.
 
 ### 5. Load them in Live
@@ -150,11 +152,14 @@ It should end with `Result: 47 tests passed, 0 tests failed`, as on the Mac.
 
 - **`cmake: command not found`:** CMake isn't on the PATH. Rerun its installer with the PATH
   option ticked, then open a new Git Bash.
-- **CMake says it can't find the preset, or that the presets file version is too new:**
-  CMake is older than 3.25. Install a newer one (step 1).
-- **`could not find any instance of Visual Studio`:** Build Tools isn't installed, or the
-  **Desktop development with C++** workload wasn't ticked. Rerun its installer and tick
-  it.
+- **CMake says it can't find the preset, or doesn't know the generator `Visual Studio 18
+  2026`:** CMake is older than 4.2. Install a newer one (step 1).
+- **`could not find any instance of Visual Studio`:** the preset doesn't match the Build
+  Tools you have. `windows-vs2026` needs the 2026 version and `windows-vs2022` the 2022
+  version. To see what's installed:
+  `"/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -all -products '*' -format text`.
+  If the right version is there, the **Desktop development with C++** workload is probably
+  missing: open Visual Studio Installer, choose **Modify** on Build Tools, and tick it.
 - **Errors about `iPlug2.cmake`, or about missing `pluginterfaces` / `public.sdk` files:**
   step 2's submodules or step 3's SDK are missing. Redo that step.
 - **`Access is denied` / `Permission denied` while copying a `.vst3`:** either Git Bash isn't
@@ -165,4 +170,4 @@ It should end with `Result: 47 tests passed, 0 tests failed`, as on the Mac.
   `C:\Program Files\Common Files\VST3` and that the system-folder option is on, then Rescan.
 - **Don't use the `windows-ninja` preset from Git Bash.** Ninja needs the compiler's
   environment variables, which only Microsoft's own command prompts set up. The
-  `windows-vs2022` preset finds the compiler by itself.
+  `windows-vs2026` preset finds the compiler by itself.
