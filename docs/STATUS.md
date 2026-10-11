@@ -15,7 +15,7 @@ slow change:
 - **Developed on:** macOS (Apple Silicon), tested as an AU in **GarageBand**.
 - **Portability matters:** no Max for Live. The DSP cores are framework-free C++.
 
-## Build, install, test (macOS)
+## Build, install, test (macOS; for Windows see the README)
 
 ```bash
 git clone --recurse-submodules <repo>    # or: git submodule update --init
