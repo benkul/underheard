@@ -183,8 +183,8 @@ std::vector<float> ResampleStereo(const float* in, int64_t frames, double ratio)
 
   // Windowed sinc with a tabulated kernel. When downsampling, the cutoff drops below the
   // output Nyquist so nothing folds back.
-  constexpr int kZeroCrossings = 16;
-  constexpr int kTableRes = 512;
+  static constexpr int kZeroCrossings = 16; // (static: the table's lambda uses them without capturing; MSVC requires it)
+  static constexpr int kTableRes = 512;
   const double cutoff = 0.97 * std::min(1., ratio);
   static std::vector<float> table = [] {
     std::vector<float> t((size_t)(kZeroCrossings * kTableRes + 2));
