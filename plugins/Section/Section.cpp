@@ -300,7 +300,9 @@ Section::Section(const InstanceInfo& info)
       g->AttachControl(new ITextControl(r.ReduceFromLeft(110.f), label, rowLabel), kNoTag, group);
       return r;
     };
-    auto add = [&](IControl* c, int tag = kNoTag) { g->AttachControl(c, tag, group); };
+    // (No default argument for the tag: MSVC rejects one on a lambda nested in the constructor.)
+    auto addTagged = [&](IControl* c, int tag) { g->AttachControl(c, tag, group); };
+    auto add = [&](IControl* c) { addTagged(c, kNoTag); };
     auto knob = [&](const IRECT& r, int i, int param, const char* label) { add(new IVKnobControl(cell(r, i), param, label, style)); };
 
     // ---- VOICES
@@ -308,7 +310,7 @@ Section::Section(const InstanceInfo& info)
     {
       IRECT r = row(o == 0 ? "OSC A" : "OSC B", 90.f);
       const int base = o == 0 ? kParamAPosition : kParamBPosition;
-      add(new TableButton(cell(r, 0, 2).GetMidVPadded(20.f), style, [this] { return TableMenuItems(); }, [this, o](int i) { ChooseTable(o, i); }),
+      addTagged(new TableButton(cell(r, 0, 2).GetMidVPadded(20.f), style, [this] { return TableMenuItems(); }, [this, o](int i) { ChooseTable(o, i); }),
           o == 0 ? kCtrlTagTableA : kCtrlTagTableB);
       knob(r, 2, base, "Position");
       knob(r, 3, base + 1, "Octave");
@@ -382,7 +384,7 @@ Section::Section(const InstanceInfo& info)
     IRECT view = page.ReduceFromRight(560.f);
     page.ReduceFromRight(12.f);
     add(new IPanelControl(view, IColor(255, 30, 28, 25)));
-    add(new roombleed_ui::RoomView(view.GetPadded(-8.f), [this] { return MakeRoomView(); }), kCtrlTagRoomView);
+    addTagged(new roombleed_ui::RoomView(view.GetPadded(-8.f), [this] { return MakeRoomView(); }), kCtrlTagRoomView);
     auto cell4 = [&](const IRECT& rr, int i, int span = 1) { return cell(rr, i, span, 4); };
     r = row("ROOM", 90.f);
     add(new IVMenuButtonControl(cell4(r, 0, 2).GetMidVPadded(20.f), kParamRoom, "", style));
