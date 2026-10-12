@@ -301,8 +301,8 @@ RoomIR GenerateRoom(const RoomSpec& spec)
                 {
                   // The pattern, with the pressure-gradient part lifted in the near field.
                   const Pickup& pk = spec.pickup;
-                  const double near = 1. + pk.proximity * (ProximityFactor(b, dist) - 1.);
-                  const double pattern = pk.a[(size_t)b] + (1. - pk.a[(size_t)b]) * cosTheta * near;
+                  const double nearGain = 1. + pk.proximity * (ProximityFactor(b, dist) - 1.);
+                  const double pattern = pk.a[(size_t)b] + (1. - pk.a[(size_t)b]) * cosTheta * nearGain;
                   double a = spread * jitter * pattern * std::exp(-kAir[(size_t)b] * dist / 2.) * (order > 0 ? pk.roomGain : 1.);
                   for (int k = 0; k < 6; k++)
                     if (hits[k])

@@ -78,7 +78,7 @@ public:
     mLast = d;
     Fit(d);
     const IText title(14.f, theme::kText, "Roboto-Regular", EAlign::Near, EVAlign::Top);
-    const IText small(13.f, theme::kTextDim, "Roboto-Regular", EAlign::Near, EVAlign::Top);
+    const IText dimText(13.f, theme::kTextDim, "Roboto-Regular", EAlign::Near, EVAlign::Top);
     g.DrawText(title, d.title.c_str(), mRECT.GetFromTop(20.f));
 
     // Floor, then walls coloured by hardness.
@@ -91,12 +91,12 @@ public:
     g.DrawLine(wallColour(3), floor.L, floor.B, floor.R, floor.B, nullptr, 4.f);
 
     // The line the mic travels along, and the source.
-    const double far = d.maxDistance;
-    g.DrawDottedLine(theme::kTextDim.WithOpacity(0.5f), X(d.sx), Y(d.sy), X(d.sx + d.dirx * far), Y(d.sy + d.diry * far), nullptr, 1.f, 4.f);
+    const double reach = d.maxDistance;
+    g.DrawDottedLine(theme::kTextDim.WithOpacity(0.5f), X(d.sx), Y(d.sy), X(d.sx + d.dirx * reach), Y(d.sy + d.diry * reach), nullptr, 1.f, 4.f);
     if (d.seats.empty())
     {
       g.FillCircle(theme::kSource, X(d.sx), Y(d.sy), 8.f);
-      g.DrawText(small, "source", IRECT(X(d.sx) + 10.f, Y(d.sy) - 8.f, X(d.sx) + 80.f, Y(d.sy) + 10.f));
+      g.DrawText(dimText, "source", IRECT(X(d.sx) + 10.f, Y(d.sy) - 8.f, X(d.sx) + 80.f, Y(d.sy) + 10.f));
     }
     for (const auto& seat : d.seats)
     {
@@ -133,7 +133,7 @@ public:
 
     char label[64];
     std::snprintf(label, sizeof label, "%.2f m", d.distance);
-    g.DrawText(small, label, IRECT(mx + 10.f, my + 6.f, mx + 90.f, my + 24.f));
+    g.DrawText(dimText, label, IRECT(mx + 10.f, my + 6.f, mx + 90.f, my + 24.f));
 
     if (d.where != 0)
     {
