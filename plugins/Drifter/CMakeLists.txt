@@ -63,6 +63,10 @@ if(TARGET ${PROJECT_NAME}-vst3)
   endif()
 endif()
 
+# Windows: compile the font into the VST3 (see the helper).
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/UnderheardWinResources.cmake)
+underheard_win_resources(${PROJECT_NAME}-vst3)
+
 # Seal the bundle's signature (built copy, then the deployed copy hosts load).
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/UnderheardSign.cmake)
 set(_out "${CMAKE_BINARY_DIR}/out")

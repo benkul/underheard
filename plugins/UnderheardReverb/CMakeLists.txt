@@ -52,6 +52,10 @@ foreach(_target ${PROJECT_NAME}-app ${PROJECT_NAME}-vst3 ${PROJECT_NAME}-au)
   endif()
 endforeach()
 
+# Windows: compile the font into the VST3 (see the helper).
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/UnderheardWinResources.cmake)
+underheard_win_resources(${PROJECT_NAME}-vst3)
+
 # Seal each bundle's signature (built copy, then the deployed copy hosts load).
 # Without this GarageBand silently hides the AU even though auval passes.
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/UnderheardSign.cmake)
