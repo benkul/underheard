@@ -67,7 +67,7 @@ public:
 
   void Draw(IGraphics& g) override
   {
-    const IColor line(255, 70, 64, 58);
+    const IColor line = underheard_palette::kControl;
     if (!Active())
     {
       g.DrawRoundRect(line, mRECT, 3.f);
@@ -76,7 +76,7 @@ public:
     const Drifter::LaneView& v = mD.mLaneView[(size_t)mIndex];
     const bool on = v.on.load();
     const double lo = mDrag ? mLo : v.lo.load(), hi = mDrag ? mHi : v.hi.load(), home = v.home.load(), value = v.value.load();
-    g.FillRoundRect(IColor(255, 36, 33, 30), mRECT, 3.f);
+    g.FillRoundRect(underheard_palette::kPanel, mRECT, 3.f);
     // On / off.
     const IRECT box = OnBox();
     g.DrawRect(kText, box);
@@ -94,7 +94,7 @@ public:
     const IRECT bar = Bar();
     auto at = [&](double x) { return bar.L + (float)std::clamp(x, 0., 1.) * bar.W(); };
     g.FillRect(line, bar);
-    g.FillRect(on ? kAccent.WithOpacity(0.45f) : IColor(255, 90, 84, 76), IRECT(at(lo), bar.T, at(hi), bar.B));
+    g.FillRect(on ? kAccent.WithOpacity(0.45f) : underheard_palette::kFrame, IRECT(at(lo), bar.T, at(hi), bar.B));
     g.FillRect(kText, IRECT(at(lo) - 1.f, bar.T - 3.f, at(lo) + 1.f, bar.B + 3.f));
     g.FillRect(kText, IRECT(at(hi) - 1.f, bar.T - 3.f, at(hi) + 1.f, bar.B + 3.f));
     g.DrawLine(kText, at(home), bar.T - 5.f, at(home), bar.B + 5.f, nullptr, 1.5f);

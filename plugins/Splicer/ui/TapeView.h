@@ -5,6 +5,7 @@
 // moves it; double-clicking clears the marks.
 
 #include "IControl.h"
+#include "Palette.h"
 
 #include <algorithm>
 #include <chrono>
@@ -20,20 +21,21 @@ using namespace igraphics;
 
 // Colours shared by the whole layout.
 namespace theme {
-const IColor kBackground(255, 24, 22, 20);
-const IColor kPanel(255, 36, 33, 30);
-const IColor kPanelSelected(255, 56, 50, 42);
-const IColor kText(255, 226, 216, 200);
-const IColor kTextDim(255, 150, 140, 128);
-const IColor kTape(255, 156, 110, 62);
-const IColor kTapeWorn(255, 58, 40, 26);
-const IColor kTapeEmpty(255, 48, 44, 40);
-const IColor kHead(255, 245, 238, 220);
-const IColor kSplice(255, 20, 18, 16);
-const IColor kMark(90, 236, 200, 96);
-const IColor kRecord(255, 214, 66, 52);
-const IColor kPlay(255, 120, 186, 96);
-const IColor kAccent(255, 206, 146, 72);
+namespace pal = underheard_palette;
+const IColor kBackground = pal::kBackground;
+const IColor kPanel = pal::kPanel;
+const IColor kPanelSelected = pal::kPanelRaised;
+const IColor kText = pal::kText;
+const IColor kTextDim = pal::kTextDim;
+const IColor kTape = pal::kTape;
+const IColor kTapeWorn = pal::kTapeWorn;
+const IColor kTapeEmpty = pal::kTapeEmpty;
+const IColor kHead = pal::kCream;
+const IColor kSplice = pal::kSplice;
+const IColor kMark = pal::kMark;
+const IColor kRecord = pal::kRecord;
+const IColor kPlay = pal::kContrast;
+const IColor kAccent = pal::kAccent;
 } // namespace theme
 
 struct TapeViewData

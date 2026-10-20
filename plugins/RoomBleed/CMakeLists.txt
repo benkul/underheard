@@ -15,6 +15,7 @@ iplug_add_plugin(${PROJECT_NAME}
   SOURCES
     RoomBleed.cpp
     RoomBleed.h
+    ${LIBS}/ui/Palette.h
     ${LIBS}/ui/RoomView.h
     ${LIBS}/fx/Warmth.h
     ${LIBS}/room/Convolver.cpp

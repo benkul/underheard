@@ -11,12 +11,14 @@ find_package(iPlug2 REQUIRED)
 set(TAPE_CORE "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/tape-core")
 set(FX "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/fx")
 set(DRIFTER "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/drifter-core")
+set(UI "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/ui")
 
 iplug_add_plugin(${PROJECT_NAME}
   SOURCES
     Splicer.cpp
     Splicer.h
     ui/TapeView.h
+    ${UI}/Palette.h
     ${TAPE_CORE}/AudioFile.cpp
     ${TAPE_CORE}/AudioFile.h
     ${TAPE_CORE}/CaptureBuffer.h
@@ -48,7 +50,7 @@ iplug_add_plugin(${PROJECT_NAME}
 
 foreach(_target ${PROJECT_NAME}-app ${PROJECT_NAME}-vst3 ${PROJECT_NAME}-au)
   if(TARGET ${_target})
-    target_include_directories(${_target} PRIVATE ${TAPE_CORE} ${FX} ${DRIFTER})
+    target_include_directories(${_target} PRIVATE ${TAPE_CORE} ${FX} ${DRIFTER} ${UI})
   endif()
 endforeach()
 

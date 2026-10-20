@@ -46,6 +46,7 @@ iplug_add_plugin(${PROJECT_NAME}
     ${LIBS}/drifter-core/DriftLanes.h
     ${LIBS}/vst3host/HostedInstrument.cpp
     ${LIBS}/vst3host/HostedInstrument.h
+    ${LIBS}/ui/Palette.h
     ${LIBS}/ui/UnderheardUI.h
     ${HOSTING_SOURCES}
     ${HOSTING_PLATFORM}

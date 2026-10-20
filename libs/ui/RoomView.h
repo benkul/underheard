@@ -8,6 +8,7 @@
 // picture comes from the same placement the room model uses, so it always matches what's heard.
 
 #include "IControl.h"
+#include "Palette.h"
 
 #include <algorithm>
 #include <array>
@@ -23,14 +24,15 @@ using namespace iplug;
 using namespace igraphics;
 
 namespace theme {
-const IColor kBackground(255, 24, 22, 20);
-const IColor kFloor(255, 34, 31, 28);
-const IColor kText(255, 226, 216, 200);
-const IColor kTextDim(255, 150, 140, 128);
-const IColor kAccent(255, 206, 146, 72);
-const IColor kSoftWall(255, 90, 72, 56);
-const IColor kHardWall(255, 226, 210, 186);
-const IColor kSource(255, 120, 186, 96);
+namespace pal = underheard_palette;
+const IColor kBackground = pal::kBackground;
+const IColor kFloor = pal::kFloor;
+const IColor kText = pal::kText;
+const IColor kTextDim = pal::kTextDim;
+const IColor kAccent = pal::kAccent;
+const IColor kSoftWall = pal::kSoftWall;
+const IColor kHardWall = pal::kHardWall;
+const IColor kSource = pal::kContrast;
 } // namespace theme
 
 struct RoomViewData

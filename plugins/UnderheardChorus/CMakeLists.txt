@@ -19,6 +19,7 @@ iplug_add_plugin(${PROJECT_NAME}
     ${LIBS}/fx/FxCommon.h
     ${LIBS}/fx/Warmth.h
     ${LIBS}/fx/NoteValues.h
+    ${LIBS}/ui/Palette.h
     ${LIBS}/ui/UnderheardUI.h
     resources/resource.h
   RESOURCES

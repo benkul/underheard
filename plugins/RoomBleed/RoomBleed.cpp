@@ -14,7 +14,10 @@ namespace {
 
 constexpr int32_t kStateMagic = 'RMBL';
 constexpr int32_t kStateVersion = 3; // 2: the loaded room tone; 3: Warmth's 50% is version 2's 100%
-const IColor kBackground(255, 24, 22, 20), kText(255, 226, 216, 200), kTextDim(255, 150, 140, 128), kAccent(255, 206, 146, 72);
+using underheard_palette::kBackground;
+using underheard_palette::kText;
+using underheard_palette::kTextDim;
+using underheard_palette::kAccent;
 
 // Interleaves an impulse as stereo (a mono impulse on both sides), for saving and resampling.
 std::vector<float> Interleave(const Impulse& imp)
@@ -85,8 +88,8 @@ RoomBleed::RoomBleed(const InstanceInfo& info)
     g->AttachCornerResizer(EUIResizerMode::Scale, false);
     g->AttachPanelBackground(kBackground);
     g->LoadFont("Roboto-Regular", ROBOTO_FN);
-    const IVStyle style = DEFAULT_STYLE.WithColor(kBG, COLOR_TRANSPARENT).WithColor(kFG, IColor(255, 70, 64, 58)).WithColor(kPR, kAccent)
-                                       .WithColor(kFR, IColor(255, 110, 100, 90)).WithColor(kX1, kAccent)
+    const IVStyle style = DEFAULT_STYLE.WithColor(kBG, COLOR_TRANSPARENT).WithColor(kFG, underheard_palette::kControl).WithColor(kPR, kAccent)
+                                       .WithColor(kFR, underheard_palette::kFrame).WithColor(kX1, kAccent)
                                        .WithLabelText(IText(14.f, kText, "Roboto-Regular")).WithValueText(IText(13.f, kTextDim, "Roboto-Regular"))
                                        .WithDrawShadows(false).WithRoundness(0.2f);
     const IText rowLabel(14.f, kTextDim, "Roboto-Regular", EAlign::Near);
@@ -100,7 +103,7 @@ RoomBleed::RoomBleed(const InstanceInfo& info)
     // The room, seen from above, on the right.
     const IRECT view = b.ReduceFromRight(410.f);
     b.ReduceFromRight(12.f);
-    g->AttachControl(new IPanelControl(view, IColor(255, 30, 28, 25)));
+    g->AttachControl(new IPanelControl(view, underheard_palette::kPanel));
     g->AttachControl(new roombleed_ui::RoomView(view.GetPadded(-8.f), {kParamDistance, kParamAim, kParamSourceX, kParamSourceY, kParamBearing},
                                                 [this] { return MakeRoomView(); }), kCtrlTagRoomView);
 

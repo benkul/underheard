@@ -35,6 +35,7 @@ iplug_add_plugin(${PROJECT_NAME}
     ${LIBS}/tape-core/AudioFile.h
     ${LIBS}/tape-core/TapeFiles.cpp
     ${LIBS}/tape-core/TapeFiles.h
+    ${LIBS}/ui/Palette.h
     ${LIBS}/ui/RoomView.h
     ${LIBS}/ui/UnderheardUI.h
     ${WDL}/convoengine.cpp

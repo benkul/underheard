@@ -694,9 +694,9 @@ void Splicer::BuildUI(IGraphics* g)
   g->LoadFont("Roboto-Regular", ROBOTO_FN);
 
   const IVStyle style = DEFAULT_STYLE.WithColor(kBG, COLOR_TRANSPARENT)
-                                     .WithColor(kFG, IColor(255, 70, 64, 58))
+                                     .WithColor(kFG, underheard_palette::kControl)
                                      .WithColor(kPR, theme::kAccent)
-                                     .WithColor(kFR, IColor(255, 110, 100, 90))
+                                     .WithColor(kFR, underheard_palette::kFrame)
                                      .WithColor(kHL, IColor(40, 255, 255, 255))
                                      .WithColor(kSH, IColor(60, 0, 0, 0))
                                      .WithColor(kX1, theme::kAccent)
@@ -864,7 +864,7 @@ void Splicer::BuildUI(IGraphics* g)
   }
 
   // ---- Master row
-  const IVStyle meterStyle = style.WithColor(kFG, IColor(255, 70, 64, 58)).WithColor(kX1, theme::kAccent);
+  const IVStyle meterStyle = style.WithColor(kFG, underheard_palette::kControl).WithColor(kX1, theme::kAccent);
   IRECT meters = master.ReduceFromRight(240.f);
   g->AttachControl(new IVPeakAvgMeterControl<4>(meters.FracRectVertical(0.5, true).GetPadded(-2.f), "In / SC", meterStyle, EDirection::Horizontal, {"L", "R", "SC L", "SC R"}), kCtrlTagInputMeter);
   g->AttachControl(new IVPeakAvgMeterControl<2>(meters.FracRectVertical(0.5, false).GetPadded(-2.f), "Out", meterStyle, EDirection::Horizontal, {"L", "R"}), kCtrlTagOutputMeter);

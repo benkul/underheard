@@ -187,7 +187,7 @@ UnderheardReverb::UnderheardReverb(const InstanceInfo& info)
     b.ReduceFromRight(12.f);
     IRECT meters = right.ReduceFromBottom(120.f);
     right.ReduceFromBottom(8.f);
-    g->AttachControl(new IPanelControl(right, IColor(255, 30, 28, 25)), kCtrlTagViewPanel);
+    g->AttachControl(new IPanelControl(right, underheard_palette::kPanel), kCtrlTagViewPanel);
     g->AttachControl(new roombleed_ui::RoomView(right.GetPadded(-8.f), {kParamDistance, kParamAim, kParamSourceX, kParamSourceY, kParamBearing},
                                                 [this] { return MakeRoomView(); }), kCtrlTagRoomView);
     g->AttachControl(new ITextControl(right.GetPadded(-24.f), "", IText(15.f, kTextDim, "Roboto-Regular", EAlign::Center)), kCtrlTagEngineNote);

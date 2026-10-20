@@ -2,6 +2,7 @@
 // The look and a few controls shared by the Underheard effect plugins (iPlug2 IGraphics).
 
 #include "IControls.h"
+#include "Palette.h"
 
 #include <functional>
 #include <string>
@@ -12,12 +13,15 @@ namespace underheard_ui {
 using namespace iplug;
 using namespace iplug::igraphics;
 
-const IColor kBackground(255, 24, 22, 20), kText(255, 226, 216, 200), kTextDim(255, 150, 140, 128), kAccent(255, 206, 146, 72);
+using underheard_palette::kBackground;
+using underheard_palette::kText;
+using underheard_palette::kTextDim;
+using underheard_palette::kAccent;
 
 inline IVStyle PanelStyle()
 {
-  return DEFAULT_STYLE.WithColor(kBG, COLOR_TRANSPARENT).WithColor(kFG, IColor(255, 70, 64, 58)).WithColor(kPR, kAccent)
-                      .WithColor(kFR, IColor(255, 110, 100, 90)).WithColor(kX1, kAccent)
+  return DEFAULT_STYLE.WithColor(kBG, COLOR_TRANSPARENT).WithColor(kFG, underheard_palette::kControl).WithColor(kPR, kAccent)
+                      .WithColor(kFR, underheard_palette::kFrame).WithColor(kX1, kAccent)
                       .WithLabelText(IText(14.f, kText, "Roboto-Regular")).WithValueText(IText(13.f, kTextDim, "Roboto-Regular"))
                       .WithDrawShadows(false).WithRoundness(0.2f);
 }

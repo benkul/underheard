@@ -53,6 +53,7 @@ iplug_add_plugin(${PROJECT_NAME}
     ${LIBS}/room/MicModel.h
     ${LIBS}/room/RoomModel.cpp
     ${LIBS}/room/RoomModel.h
+    ${LIBS}/ui/Palette.h
     ${LIBS}/ui/RoomView.h
     ${LIBS}/ui/UnderheardUI.h
     ${WDL}/convoengine.cpp

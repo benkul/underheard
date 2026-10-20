@@ -383,7 +383,7 @@ Section::Section(const InstanceInfo& info)
     group = kPages[2];
     IRECT view = page.ReduceFromRight(560.f);
     page.ReduceFromRight(12.f);
-    add(new IPanelControl(view, IColor(255, 30, 28, 25)));
+    add(new IPanelControl(view, underheard_palette::kPanel));
     addTagged(new roombleed_ui::RoomView(view.GetPadded(-8.f), [this] { return MakeRoomView(); }), kCtrlTagRoomView);
     auto cell4 = [&](const IRECT& rr, int i, int span = 1) { return cell(rr, i, span, 4); };
     r = row("ROOM", 90.f);
